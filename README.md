@@ -1,4 +1,4 @@
-# Platform GitHub Actions Library `platform-github-actions`
+# Platform GitHub Actions Library
 
 This repository contains **reusable GitHub Actions workflows** that standardize CI/CD pipelines across our organization. These workflows are centrally maintained by the Platform Engineering team and are meant to be consumed via `workflow_call` from individual service repositories.
 
