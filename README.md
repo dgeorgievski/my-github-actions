@@ -36,7 +36,7 @@ jobs:
 
 Inputs vary by workflow. Refer to the top of each workflow YAML file or [input reference section](#workflow-inputs).
 
-🧪 Examples
+## Examples
 
 We provide starter templates in the /templates folder:
 
@@ -45,9 +45,7 @@ We provide starter templates in the /templates folder:
 
 Copy and customize one for your service to get started quickly.
 
-⸻
-
-🚦 Versioning
+## Versioning
 
 Workflows should be consumed using tagged versions, not main.
 
