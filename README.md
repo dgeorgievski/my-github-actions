@@ -27,7 +27,7 @@ on:
 
 jobs:
   test:
-    uses: your-org/platform-github-actions/.github/workflows/test-node.yml@v1
+    uses: altimetrik-digital-enablement-demo-hub/platform-github-actions/.github/workflows/test-node.yml@v1
     with:
       node-version: '20'
 ```
@@ -36,16 +36,18 @@ jobs:
 
 To promote consistency and scalability, our reusable workflows follow a standardized set of CI/CD stages. These stages help teams implement reliable pipelines and allow platform tooling (e.g., dashboards, security gates) to plug in seamlessly.
 
-| Stage       | Purpose                                                      | Typical Tools / Examples                          |
-|-------------|--------------------------------------------------------------|---------------------------------------------------|
-| `checkout`  | Fetch source code, set up environment                        | `actions/checkout`, `setup-node`, `setup-python`  |
-| `lint`      | Code formatting, dependency scan, secret detection           | `eslint`, `flake8`, `gitleaks`, `trivy fs`, `npm audit` |
-| `test`      | Unit tests, code coverage, static analysis                   | `jest`, `pytest`, `SonarQube`, `CodeQL`, `semgrep`|
-| `build`     | Compile or prepare source artifacts                          | `npm run build`, `mvn package`, `go build`        |
-| `package`   | Create deployable artifacts (e.g., containers, zips, SBOMs)  | `docker build`, `zip`, `cyclonedx`, `trivy image` |
-| `security`  | Deep scanning (SAST, image vuln, license)                    | `Veracode`, `Snyk`, `Trivy`, `CodeQL`, `OSS Review` |
-| `deploy`    | Deploy to environment (dev, staging, prod)                   | `kubectl`, `helm`, `aws deploy`, `argo`           |
-| `notify`    | Send status notifications or post-results                    | Slack, Microsoft Teams, GitHub PR status updates  |
+| Stage            | Purpose                                                        | Typical Tools / Examples                          |
+|------------------|----------------------------------------------------------------|---------------------------------------------------|
+| `checkout`       | Fetch source code, set up environment                          | `actions/checkout`                                |
+| `setup`          | Generate pipeline-wide metadata and context used across stages | image tag name, normalized branch name, timestamps, versioning |
+| `language-setup` | Install required language runtimes for downstream execution    | `setup-node`, `setup-python`, `setup-go`, `setup-dotnet` |
+| `lint`           | Code formatting, dependency scan, secret detection             | `eslint`, `flake8`, `gitleaks`, `trivy fs`, `npm audit` |
+| `test`           | Unit tests, code coverage, static analysis                     | `jest`, `pytest`, `SonarQube`, `CodeQL`, `semgrep`|
+| `build`          | Compile or prepare source artifacts                            | `npm run build`, `mvn package`, `go build`        |
+| `package`        | Create deployable artifacts (e.g., containers, zips, SBOMs)    | `docker build`, `zip`, `cyclonedx`, `trivy image` |
+| `security`       | Deep scanning (SAST, image vuln, license)                      | `Veracode`, `Snyk`, `Trivy`, `CodeQL`, `OSS Review` |
+| `deploy`         | Deploy to environment (dev, staging, prod)                     | `kubectl`, `helm`, `aws deploy`, `argo`           |
+| `notify`         | Send status notifications or post-results                      | Slack, Microsoft Teams, GitHub PR status updates  |
 
 > **Note:** Not all pipelines use every stage. You can opt-in to stages via inputs or choose from templates like `dev-build.yml` or `rel-build.yml`.
 
