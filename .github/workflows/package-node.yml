@@ -1,0 +1,40 @@
+name: Package Node Project
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        description: 'Working directory'
+        required: false
+        default: '.'
+        type: string
+      package-command:
+        description: 'Custom command for packaging (e.g., npm pack, zip, etc.)'
+        required: false
+        default: 'npm pack'
+        type: string
+      artifact-name:
+        description: 'Name of the uploaded artifact'
+        required: false
+        default: 'package-artifact'
+        type: string
+      package-output-dir:
+        description: 'Directory where the package is generated (relative to working-directory)'
+        required: false
+        default: '.'
+        type: string
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      # This step packages a Node.js project
+      - name: Package Project
+        run: ${{ inputs.package-command }}
+
+      # Upload the package as an artifact
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: ${{ inputs.working-directory }}/${{ inputs.package-output-dir }}/*
