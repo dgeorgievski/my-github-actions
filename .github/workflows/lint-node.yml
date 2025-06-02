@@ -1,0 +1,28 @@
+name: Lint Node Project
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: 'Node.js version'
+        required: false
+        default: '18'
+        type: string
+      working-directory:
+        description: 'Working directory'
+        required: false
+        default: '.'
+        type: string
+      lint-command:
+        description: 'Lint command (e.g., npm run lint or npx ng lint)'
+        required: false
+        default: 'npm run lint'
+        type: string
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      # This step runs the lint command
+      - name: Lint Project
+        run: ${{ inputs.lint-command }}
