@@ -1,0 +1,22 @@
+name: Build Node Project
+
+on:
+  workflow_call:
+    inputs:
+      build-command:
+        description: 'Build command (e.g., npm run build or npx ng build)'
+        required: false
+        default: 'npm run build'
+        type: string
+    secrets:
+      NODE_AUTH_TOKEN:
+        description: 'Token for private registry or npm access'
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # This step builds the Node.js project
+      - name: Build Project
+        run: ${{ inputs.build-command }}
