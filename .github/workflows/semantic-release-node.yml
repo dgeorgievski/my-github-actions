@@ -1,0 +1,17 @@
+name: Semantic Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+     # As a pre-requisite, please install npm install --save-dev semantic-release @semantic-release/changelog @semantic-release/git @semantic-release/github
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
