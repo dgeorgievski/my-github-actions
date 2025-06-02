@@ -3,16 +3,6 @@ name: Lint Node Project
 on:
   workflow_call:
     inputs:
-      node-version:
-        description: 'Node.js version'
-        required: false
-        default: '18'
-        type: string
-      working-directory:
-        description: 'Working directory'
-        required: false
-        default: '.'
-        type: string
       lint-command:
         description: 'Lint command (e.g., npm run lint or npx ng lint)'
         required: false
