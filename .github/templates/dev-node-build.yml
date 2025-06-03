@@ -24,7 +24,7 @@ on:
       build-command:
         description: 'build command (e.g., npm run)'
         required: false
-        default: 'npm run'
+        default: 'npm run build'
         type: string
 
       test-command:
