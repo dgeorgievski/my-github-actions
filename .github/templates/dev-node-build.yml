@@ -50,14 +50,23 @@ jobs:
 
   # This job builds the Node.js project, preparing it for packaging
   build:
-    needs: setup
+    needs: lint
     uses: ../workflows/build-node.yml
     with:
       build-command: ${{ inputs.build-command }}
 
+  # This job executes unit test
+  test:
+    needs: lint
+    uses: ./.github/workflows/unit-test-node.yml
+    with:
+      node-version: ${{ inputs.node-version }}
+      working-directory: ${{ inputs.working-directory }}
+      test-command: 'npm test'
+
   # This job packages the Node.js project, creating an artifact for deployment or distribution
   package:
-    needs: build
+    needs: [build, test]
     uses: ../workflows/package-node.yml
     with:
       working-directory: ${{ inputs.working-directory }}
@@ -67,5 +76,5 @@ jobs:
 
   # This job handles the release process, using semantic-release to automate versioning and publishing
   release:
-    needs: [build, lint, package]
+    needs: [build, test, lint, package]
     uses: ../workflows/semantic-release-node.yml
