@@ -16,11 +16,23 @@ on:
         type: string
       
       lint-command:
-        description: 'Lint command (e.g., npm run lint or npx ng lint)'
+        description: 'Lint command (e.g., npm run lint)'
         required: false
         default: 'npm run lint'
         type: string
 
+      build-command:
+        description: 'build command (e.g., npm run)'
+        required: false
+        default: 'npm run'
+        type: string
+
+      test-command:
+        description: 'test command (e.g., npm test)'
+        required: false
+        default: 'npm test'
+        type: string
+        
       package-command:
         description: "Command to package the app"
         required: false
@@ -58,11 +70,9 @@ jobs:
   # This job executes unit test
   test:
     needs: lint
-    uses: ./.github/workflows/unit-test-node.yml
+    uses: ../workflows/unit-test-node.yml
     with:
-      node-version: ${{ inputs.node-version }}
-      working-directory: ${{ inputs.working-directory }}
-      test-command: 'npm test'
+      test-command: ${{ inputs.test-command }}
 
   # This job packages the Node.js project, creating an artifact for deployment or distribution
   package:
