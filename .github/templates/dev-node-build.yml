@@ -2,6 +2,9 @@ name: Complete node Pipeline
 
 on:
   workflow_call:
+    secrets:
+      TOKEN:
+        required: true
     inputs:
       node-version:
         description: "Node.js version to use"
