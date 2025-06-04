@@ -1,0 +1,93 @@
+name: Complete node Pipeline
+
+on:
+  workflow_call:
+    secrets:
+      TOKEN:
+        required: true
+    inputs:
+      node-version:
+        description: "Node.js version to use"
+        required: false
+        default: '20'
+        type: string
+
+      working-directory:
+        description: "Project root directory"
+        required: false
+        default: '.'
+        type: string
+      
+      lint-command:
+        description: 'Lint command (e.g., npm run lint)'
+        required: false
+        default: 'npm run lint'
+        type: string
+
+      build-command:
+        description: 'build command (e.g., npm run)'
+        required: false
+        default: 'npm run build'
+        type: string
+
+      test-command:
+        description: 'test command (e.g., npm test)'
+        required: false
+        default: 'npm test'
+        type: string
+        
+      package-command:
+        description: "Command to package the app"
+        required: false
+        default: 'npm pack'
+        type: string
+
+      artifact-name:
+        description: "Name of the build artifact"
+        required: false
+        default: 'node-package'
+        type: string
+
+jobs:
+  # This job sets up the Node.js environment, installs dependencies, and prepares the project for building
+  setup:
+    uses: ./setup-node.yml
+    with:
+      node-version: ${{ inputs.node-version }}
+      working-directory: ${{ inputs.working-directory }}
+
+  # This job runs the linting process to ensure code quality
+  lint:
+    needs: setup
+    uses: ./lint-node.yml
+    with:
+      lint-command: ${{ inputs.lint-command }}
+
+  # This job builds the Node.js project, preparing it for packaging
+  build:
+    needs: lint
+    uses: ./build-node.yml
+    with:
+      build-command: ${{ inputs.build-command }}
+
+  # This job executes unit test
+  test:
+    needs: lint
+    uses: ./unit-test-node.yml
+    with:
+      test-command: ${{ inputs.test-command }}
+
+  # This job packages the Node.js project, creating an artifact for deployment or distribution
+  package:
+    needs: [build, test]
+    uses: ./package-node.yml
+    with:
+      working-directory: ${{ inputs.working-directory }}
+      package-command: ${{ inputs.package-command }}
+      artifact-name: ${{ inputs.artifact-name }}
+      package-output-dir: '.'
+
+  # This job handles the release process, using semantic-release to automate versioning and publishing
+  release:
+    needs: [build, test, lint, package]
+    uses: ./semantic-release-node.yml
