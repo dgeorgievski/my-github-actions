@@ -51,7 +51,7 @@ on:
 jobs:
   # This job sets up the Node.js environment, installs dependencies, and prepares the project for building
   setup:
-    uses: ./setup-node.yml
+    uses: ./.github/workflows/setup-node.yml
     with:
       node-version: ${{ inputs.node-version }}
       working-directory: ${{ inputs.working-directory }}
@@ -59,28 +59,28 @@ jobs:
   # This job runs the linting process to ensure code quality
   lint:
     needs: setup
-    uses: ./lint-node.yml
+    uses: ./.github/workflows/lint-node.yml
     with:
       lint-command: ${{ inputs.lint-command }}
 
   # This job builds the Node.js project, preparing it for packaging
   build:
     needs: lint
-    uses: ./build-node.yml
+    uses: ./.github/workflows/build-node.yml
     with:
       build-command: ${{ inputs.build-command }}
 
   # This job executes unit test
   test:
     needs: lint
-    uses: ./unit-test-node.yml
+    uses: ./.github/workflows/unit-test-node.yml
     with:
       test-command: ${{ inputs.test-command }}
 
   # This job packages the Node.js project, creating an artifact for deployment or distribution
   package:
     needs: [build, test]
-    uses: ./package-node.yml
+    uses: ./.github/workflows/package-node.yml
     with:
       working-directory: ${{ inputs.working-directory }}
       package-command: ${{ inputs.package-command }}
@@ -90,4 +90,4 @@ jobs:
   # This job handles the release process, using semantic-release to automate versioning and publishing
   release:
     needs: [build, test, lint, package]
-    uses: ./semantic-release-node.yml
+    uses: ./.github/workflows/semantic-release-node.yml
