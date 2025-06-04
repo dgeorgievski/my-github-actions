@@ -1,0 +1,41 @@
+name: Build, lint and test
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      language:
+        required: true
+        type: string
+      app-name:
+        required: true
+        type: string
+
+env:
+  DOTNET_VERSION: '9.0.300' # The .NET SDK version to use  
+
+jobs:
+  build-and-test:
+    if: ${{ inputs.language == 'csharp' }}
+    name: test-csharp-${{matrix.os}}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        # os: [ubuntu-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: install dependencies
+      run: dotnet restore
+    
+    - name: build
+      run: dotnet build --configuration Release --no-restore
+    
+    - name: test
+      run: dotnet test --no-restore --verbosity normal
