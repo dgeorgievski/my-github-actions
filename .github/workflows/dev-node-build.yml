@@ -1,4 +1,4 @@
-name: Complete Node Pipeline
+name: Complete node Pipeline
 
 on:
   workflow_call:
@@ -17,7 +17,7 @@ on:
         required: false
         default: '.'
         type: string
-
+      
       lint-command:
         description: 'Lint command (e.g., npm run lint)'
         required: false
@@ -25,17 +25,17 @@ on:
         type: string
 
       build-command:
-        description: 'Build command (e.g., npm run build)'
+        description: 'build command (e.g., npm run)'
         required: false
         default: 'npm run build'
         type: string
 
       test-command:
-        description: 'Test command (e.g., npm test)'
+        description: 'test command (e.g., npm test)'
         required: false
         default: 'npm test'
         type: string
-
+        
       package-command:
         description: "Command to package the app"
         required: false
@@ -49,80 +49,45 @@ on:
         type: string
 
 jobs:
+  # This job sets up the Node.js environment, installs dependencies, and prepares the project for building
   setup:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/setup-node.yml@patch-1
+    with:
+      node-version: ${{ inputs.node-version }}
+      working-directory: ${{ inputs.working-directory }}
 
-      - name: Setup Node.js ${{ inputs.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ inputs.node-version }}
-
-      - name: Install dependencies
-        run: npm ci
-        working-directory: ${{ inputs.working-directory }}
-
+  # This job runs the linting process to ensure code quality
   lint:
     needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/lint-node.yml@patch-1
+    with:
+      lint-command: ${{ inputs.lint-command }}
 
-      - name: Lint code
-        run: ${{ inputs.lint-command }}
-        working-directory: ${{ inputs.working-directory }}
-
+  # This job builds the Node.js project, preparing it for packaging
   build:
     needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/build-node.yml@patch-1
+    with:
+      build-command: ${{ inputs.build-command }}
 
-      - name: Build project
-        run: ${{ inputs.build-command }}
-        working-directory: ${{ inputs.working-directory }}
-
+  # This job executes unit test
   test:
     needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/unit-test-node.yml@patch-1
+    with:
+      test-command: ${{ inputs.test-command }}
 
-      - name: Run tests
-        run: ${{ inputs.test-command }}
-        working-directory: ${{ inputs.working-directory }}
-
+  # This job packages the Node.js project, creating an artifact for deployment or distribution
   package:
     needs: [build, test]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/package-node.yml@patch-1
+    with:
+      working-directory: ${{ inputs.working-directory }}
+      package-command: ${{ inputs.package-command }}
+      artifact-name: ${{ inputs.artifact-name }}
+      package-output-dir: '.'
 
-      - name: Package project
-        run: ${{ inputs.package-command }}
-        working-directory: ${{ inputs.working-directory }}
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ inputs.artifact-name }}
-          path: ${{ inputs.working-directory }}
-
+  # This job handles the release process, using semantic-release to automate versioning and publishing
   release:
     needs: [build, test, lint, package]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Run semantic release
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        run: npx semantic-release
-        working-directory: ${{ inputs.working-directory }}
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/semantic-release-node.yml@patch-1
