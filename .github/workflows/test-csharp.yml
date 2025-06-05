@@ -27,6 +27,11 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ inputs.language }}
+        
     - name: install dependencies
       run: dotnet restore
     
@@ -35,11 +40,5 @@ jobs:
     
     - name: test
       run: dotnet test --no-restore --verbosity normal
-
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
-      with:
-        languages: ${{ inputs.language }}
-    
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
