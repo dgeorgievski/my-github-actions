@@ -13,6 +13,9 @@ on:
         required: true
         type: string
   workflow_call:
+    outputs:
+      app_version: 
+        value: ${{ jobs.build-csharp.outputs.app_version }}
     inputs:
       language:
         required: true
@@ -35,6 +38,8 @@ jobs:
     if: ${{ inputs.language == 'csharp' }}
     name: build
     runs-on: 'ubuntu-latest'
+    outputs:
+      app_version: ${{ steps.versionize.outputs.app_version }}
     steps:
     - uses: actions/checkout@v3
       with:
@@ -72,8 +77,13 @@ jobs:
         echo "Running Versionize to determine if a release is needed"
         versionize --version 
         versionize --exit-insignificant-commits
-
+        echo "app_version=$(versionize inspect)" >> $GITHUB_ENV
       continue-on-error: true
+    - name: Check versionize result
+      id: check_versionize
+      if: steps.versionize.outcome == 'success'
+      run: |
+        echo "Current app version: ${{ steps.versionize.outputs.app_version }}" 
     - name: No release required
       if: steps.versionize.outcome != 'success'
       run: echo "Skipping Release. No release required."
