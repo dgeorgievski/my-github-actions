@@ -17,13 +17,8 @@ env:
 jobs:
   build-and-test:
     if: ${{ inputs.language == 'csharp' }}
-    name: test-csharp-${{matrix.os}}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        # os: [ubuntu-latest, windows-latest]
-
+    name: test-csharp
+    runs-on: 'ubuntu-latest'
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET Core
