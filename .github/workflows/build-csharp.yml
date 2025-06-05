@@ -77,7 +77,7 @@ jobs:
         echo "Running Versionize to determine if a release is needed"
         versionize --version 
         versionize --exit-insignificant-commits
-        echo "app_version=$(versionize inspect)" >> $GITHUB_ENV
+        echo "app_version=$(versionize inspect)" >> $GITHUB_OUTPUT
       continue-on-error: true
     - name: Check versionize result
       id: check_versionize
