@@ -44,7 +44,7 @@ jobs:
         uses: snyk/actions/docker@master
         continue-on-error: true
         with:
-          image: ${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs }}
+          image: ${{ inputs.registry }}/${{ inputs.image-name }}:${{ inputs.image-tag }}
           args: --file=${{ inputs.dockerFile }} 
         env:
           SNYK_TOKEN: ${{ secrets.GITHUB_TOKEN }}
