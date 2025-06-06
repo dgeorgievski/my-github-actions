@@ -19,7 +19,7 @@ runs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ inputs.version }}
+        password: ${{ inputs.token }}
     
     - name: Convert repository name to lowercase
       shell: bash
