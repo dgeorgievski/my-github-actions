@@ -34,9 +34,11 @@ runs:
     # Install dependencies
     - name: Install dependencies
       run: npm ci
+      shell: bash
 
     # This step runs the lint command
     - name: Lint Project
       run: ${{ inputs.lint-command }}
       working-directory: ${{ inputs.working-directory }}
       continue-on-error: true
+      shell: bash
