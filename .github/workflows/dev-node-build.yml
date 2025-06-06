@@ -91,10 +91,16 @@ jobs:
       artifact-name: ${{ inputs.artifact-name }}
       package-output-dir: '.'
 
+  versioning:
+    uses: ./.github/workflows/auto-version-tag.yml@patch-1
+
   docker-publish:
-    needs: package
+    needs: versioning
+    if: ${{ needs.versioning.outputs.new_tag != '' }}
     # This job builds and publishes a Docker image to GitHub Container Registry (GHCR)
     uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/docker-publish.yml@patch-1
+    with:
+      version: ${{ needs.versioning.outputs.new_tag }}
 
   # This job handles the release process, using semantic-release to automate versioning and publishing
   release:
