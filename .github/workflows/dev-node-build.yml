@@ -71,10 +71,17 @@ jobs:
 
   codeql:
     needs: build
-    # This job runs CodeQL analysis to identify security vulnerabilities and code quality issues
-    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/codeql.yml@patch-1
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      # This job runs CodeQL analysis to identify security vulnerabilities and code quality issues
+      - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/codeql@patch-1
+        with:
+          languages: javascript
     
-
 
   # This job executes unit test
   test:

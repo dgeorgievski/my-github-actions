@@ -1,0 +1,25 @@
+name: CodeQL Steps
+description: Perform CodeQL scanning steps
+
+inputs:
+  languages:
+    description: 'Languages to analyze'
+    required: true
+    default: 'javascript'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ inputs.languages }}
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v3
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
