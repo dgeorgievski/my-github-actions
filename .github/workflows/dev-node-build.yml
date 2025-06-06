@@ -61,11 +61,13 @@ jobs:
   # This job builds the Node.js project, preparing it for packaging
   build:
     needs: lint
-    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/build-node.yml@patch-1
-    with:
-      build-command: ${{ inputs.build-command }}
-      node-version: ${{ inputs.node-version }}
-      working-directory: ${{ inputs.working-directory }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/node-templates/build@patch-1
+        with:
+          build-command: ${{ inputs.build-command }}
+          node-version: ${{ inputs.node-version }}
+          working-directory: ${{ inputs.working-directory }}
 
   codeql:
     needs: build
