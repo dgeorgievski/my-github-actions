@@ -89,11 +89,13 @@ jobs:
   # This job executes unit test
   test:
     needs: build
-    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/unit-test-node.yml@patch-1
-    with:
-      test-command: ${{ inputs.test-command }}
-      node-version: ${{ inputs.node-version }}
-      working-directory: ${{ inputs.working-directory }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/jest-unit-test@patch-1
+        with:
+          test-command: ${{ inputs.test-command }}
+          node-version: ${{ inputs.node-version }}
+          working-directory: ${{ inputs.working-directory }}
 
   # This job packages the Node.js project, creating an artifact for deployment or distribution
   package:
