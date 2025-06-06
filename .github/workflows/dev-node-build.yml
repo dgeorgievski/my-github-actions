@@ -120,7 +120,8 @@ jobs:
     outputs:
       new_tag: ${{ steps.generate-tag.outputs.tag }}
     steps:
-      - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/git-tag-generation@patch-1
+      - id: generate-tag
+        uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/git-tag-generation@patch-1
 
   docker-publish:
     runs-on: ubuntu-latest
