@@ -44,5 +44,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ steps.repo.outputs.repo }}:${{ needs.versioning.outputs.tag }}
+            ghcr.io/${{ steps.repo.outputs.repo }}:${{ inputs.version }}
             ghcr.io/${{ steps.repo.outputs.repo }}:latest
