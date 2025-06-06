@@ -2,9 +2,6 @@ name: Complete node Pipeline
 
 on:
   workflow_call:
-    secrets:
-      TOKEN:
-        required: true
     inputs:
       node-version:
         description: "Node.js version to use"
@@ -49,38 +46,45 @@ on:
         type: string
 
 jobs:
-  # This job sets up the Node.js environment, installs dependencies, and prepares the project for building
-  setup:
-    uses: ./setup-node.yml
-    with:
-      node-version: ${{ inputs.node-version }}
-      working-directory: ${{ inputs.working-directory }}
 
   # This job runs the linting process to ensure code quality
   lint:
-    needs: setup
-    uses: ./lint-node.yml
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/lint-node.yml@patch-1
     with:
       lint-command: ${{ inputs.lint-command }}
+      node-version: ${{ inputs.node-version }}
+      working-directory: ${{ inputs.working-directory }}
+
 
   # This job builds the Node.js project, preparing it for packaging
   build:
     needs: lint
-    uses: ./build-node.yml
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/build-node.yml@patch-1
     with:
       build-command: ${{ inputs.build-command }}
+      node-version: ${{ inputs.node-version }}
+      working-directory: ${{ inputs.working-directory }}
+
+  codeql:
+    needs: build
+    # This job runs CodeQL analysis to identify security vulnerabilities and code quality issues
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/codeql.yml@patch-1
+    
+
 
   # This job executes unit test
   test:
-    needs: lint
-    uses: ./unit-test-node.yml
+    needs: build
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/unit-test-node.yml@patch-1
     with:
       test-command: ${{ inputs.test-command }}
+      node-version: ${{ inputs.node-version }}
+      working-directory: ${{ inputs.working-directory }}
 
   # This job packages the Node.js project, creating an artifact for deployment or distribution
   package:
     needs: [build, test]
-    uses: ./package-node.yml
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/package-node.yml@patch-1
     with:
       working-directory: ${{ inputs.working-directory }}
       package-command: ${{ inputs.package-command }}
@@ -90,4 +94,4 @@ jobs:
   # This job handles the release process, using semantic-release to automate versioning and publishing
   release:
     needs: [build, test, lint, package]
-    uses: ./semantic-release-node.yml
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/semantic-release-node.yml@patch-1

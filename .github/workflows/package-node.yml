@@ -23,18 +23,40 @@ on:
         required: false
         default: '.'
         type: string
+      node-version:
+        description: 'Node.js version to use'
+        required: false
+        default: '20'
+        type: string
 
 jobs:
   package:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
+      # Setup Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          registry-url: 'https://registry.npmjs.org/'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
       # This step packages a Node.js project
       - name: Package Project
-        run: ${{ inputs.package-command }}
+        id: pack
+        run: |
+          PACKAGE_FILE=$(npm pack)
+          echo "package_file=$PACKAGE_FILE" >> $GITHUB_OUTPUT
 
       # Upload the package as an artifact
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact-name }}
-          path: ${{ inputs.working-directory }}/${{ inputs.package-output-dir }}/*
+          path: ${{ steps.pack.outputs.package_file }}
