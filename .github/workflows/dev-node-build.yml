@@ -49,7 +49,7 @@ jobs:
 
   # This job runs the linting process to ensure code quality
   lint:
-    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/lint-node.yml@patch-1
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/node-templates/lint-node.yml@patch-1
     with:
       lint-command: ${{ inputs.lint-command }}
       node-version: ${{ inputs.node-version }}
@@ -102,8 +102,3 @@ jobs:
     uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/docker-publish.yml@patch-1
     with:
       version: ${{ needs.versioning.outputs.new_tag }}
-
-  # This job handles the release process, using semantic-release to automate versioning and publishing
-  release:
-    needs: [build, test, lint, package]
-    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/semantic-release-node.yml@patch-1
