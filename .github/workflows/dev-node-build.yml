@@ -131,6 +131,6 @@ jobs:
     if: ${{ needs.versioning.outputs.new_tag != '' }}
     steps:
     # This job builds and publishes a Docker image to GitHub Container Registry (GHCR)
-      - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/docker-publishpatch-1
+      - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/docker-publish@patch-1
         with:
           version: ${{ needs.versioning.outputs.new_tag }}
