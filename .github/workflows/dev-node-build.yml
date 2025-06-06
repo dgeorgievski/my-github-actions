@@ -91,11 +91,13 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/node-templates/setup@patch-1
+        with:
+          node-version: ${{ inputs.node-version }}
+          working-directory: ${{ inputs.working-directory }}
       - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/jest-unit-test@patch-1
         with:
           test-command: ${{ inputs.test-command }}
-          node-version: ${{ inputs.node-version }}
-          working-directory: ${{ inputs.working-directory }}
 
   # This job packages the Node.js project, creating an artifact for deployment or distribution
   package:
