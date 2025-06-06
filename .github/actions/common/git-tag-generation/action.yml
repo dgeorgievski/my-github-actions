@@ -1,5 +1,10 @@
 name: Auto Version Tag
 
+outputs:
+  tag:
+    description: "The new semantic version tag"
+    value: ${{ steps.set-tag.outputs.tag }}
+
 runs:
   using: 'composite'
   steps:
