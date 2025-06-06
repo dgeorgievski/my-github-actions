@@ -4,6 +4,9 @@ inputs:
   version:
     required: true
     type: string
+  token:
+    required: true
+    type: string
 
 runs:
   using: 'composite'
@@ -16,7 +19,7 @@ runs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+        password: ${{ inputs.version }}
     
     - name: Convert repository name to lowercase
       shell: bash

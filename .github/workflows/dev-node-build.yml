@@ -135,3 +135,4 @@ jobs:
       - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/docker-publish@patch-1
         with:
           version: ${{ needs.versioning.outputs.new_tag }}
+          token: ${{ secrets.GITHUB_TOKEN }}
