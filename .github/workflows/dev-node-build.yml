@@ -92,7 +92,7 @@ jobs:
       package-output-dir: '.'
 
   versioning:
-    uses: KaranbirSinghAhluwalia/platform-github-actions//.github/workflows/auto-version-tag.yml@patch-1
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/auto-version-tag.yml@patch-1
 
   docker-publish:
     needs: versioning
