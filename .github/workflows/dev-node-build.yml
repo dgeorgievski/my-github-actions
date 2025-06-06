@@ -49,11 +49,13 @@ jobs:
 
   # This job runs the linting process to ensure code quality
   lint:
-    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/node-templates/lint-node.yml@patch-1
-    with:
-      lint-command: ${{ inputs.lint-command }}
-      node-version: ${{ inputs.node-version }}
-      working-directory: ${{ inputs.working-directory }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/node-templates/lint@patch-1
+        with:
+          lint-command: ${{ inputs.lint-command }}
+          node-version: ${{ inputs.node-version }}
+          working-directory: ${{ inputs.working-directory }}
 
 
   # This job builds the Node.js project, preparing it for packaging
