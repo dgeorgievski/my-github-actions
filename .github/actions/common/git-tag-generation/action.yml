@@ -9,11 +9,13 @@ runs:
         fetch-depth: 0
 
     - name: Setup Git
+      shell: bash
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
     - name: Determine tag from commits
+      shell: bash
       id: set-tag
       run: |
         DEFAULT_VERSION="v0.1.0"

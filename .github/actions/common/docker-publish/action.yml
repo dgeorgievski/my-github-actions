@@ -19,6 +19,7 @@ runs:
         password: ${{ secrets.GITHUB_TOKEN }}
     
     - name: Convert repository name to lowercase
+      shell: bash
       id: repo
       run: |
         repo_lower=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
