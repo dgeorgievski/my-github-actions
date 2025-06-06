@@ -100,12 +100,17 @@ jobs:
   # This job packages the Node.js project, creating an artifact for deployment or distribution
   package:
     needs: [build, test]
-    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/package-node.yml@patch-1
-    with:
-      working-directory: ${{ inputs.working-directory }}
-      package-command: ${{ inputs.package-command }}
-      artifact-name: ${{ inputs.artifact-name }}
-      package-output-dir: '.'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/node-templates/setup@patch-1
+        with:
+          node-version: ${{ inputs.node-version }}
+          working-directory: '.'
+      # This step packages the Node.js project
+      - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/git-package@patch-1
+        with:
+          package-command: ${{ inputs.package-command }}
+          artifact-name: ${{ inputs.artifact-name }}
 
   versioning:
     needs: [build, test, lint, package]
