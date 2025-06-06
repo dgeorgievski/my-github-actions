@@ -118,7 +118,7 @@ jobs:
     permissions:
       contents: write
     outputs:
-      new_tag: ${{ steps.set-tag.outputs.tag }}
+      new_tag: ${{ steps.generate-tag.outputs.tag }}
     steps:
       - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/git-tag-generation@patch-1
 
