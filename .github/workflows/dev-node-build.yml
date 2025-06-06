@@ -68,7 +68,9 @@ jobs:
           build-command: ${{ inputs.build-command }}
           node-version: ${{ inputs.node-version }}
           working-directory: ${{ inputs.working-directory }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
+  # This job runs CodeQL analysis to identify security vulnerabilities and code quality issues
   codeql:
     needs: build
     runs-on: ubuntu-latest
