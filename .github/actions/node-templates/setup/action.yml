@@ -12,9 +12,6 @@ inputs:
 
 runs:
   using: 'composite'
-  defaults:
-    run:
-      working-directory: ${{ inputs.working-directory }}
   steps:
     # Checkout code
     - name: Checkout code

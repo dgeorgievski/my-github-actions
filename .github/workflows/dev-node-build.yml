@@ -62,6 +62,7 @@ jobs:
   build:
     needs: lint
     runs-on: ubuntu-latest
+    
     steps:
       - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/node-templates/build@patch-1
         with:
