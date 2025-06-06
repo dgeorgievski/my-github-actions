@@ -25,6 +25,12 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Convert repository name to lowercase
+        id: repo
+        run: |
+          repo_lower=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
+          echo "repo=$repo_lower" >> $GITHUB_OUTPUT
 
       - name: Set up Docker metadata
         id: meta
@@ -38,5 +44,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ inputs.version }}
-            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ steps.repo.outputs.repo }}:${{ needs.versioning.outputs.tag }}
+            ghcr.io/${{ steps.repo.outputs.repo }}:latest
