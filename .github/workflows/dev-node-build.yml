@@ -91,6 +91,11 @@ jobs:
       artifact-name: ${{ inputs.artifact-name }}
       package-output-dir: '.'
 
+  docker-publish:
+    needs: package
+    # This job builds and publishes a Docker image to GitHub Container Registry (GHCR)
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/docker-publish.yml@patch-1
+
   # This job handles the release process, using semantic-release to automate versioning and publishing
   release:
     needs: [build, test, lint, package]
