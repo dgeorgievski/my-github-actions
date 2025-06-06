@@ -25,6 +25,7 @@ runs:
     # This step packages a Node.js project
     - name: Package Project
       id: pack
+      shell: bash
       run: |
         PACKAGE_FILE=$(npm pack)
         echo "package_file=$PACKAGE_FILE" >> $GITHUB_OUTPUT
