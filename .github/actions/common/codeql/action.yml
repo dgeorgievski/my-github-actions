@@ -20,3 +20,15 @@ runs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
+
+    - name: CodeQL Summary
+      shell: bash
+      run: |
+        echo "## 🔐 CodeQL Analysis" >> $GITHUB_STEP_SUMMARY
+        echo "- Check [Security > Code Scanning Alerts](../../security/code-scanning) for results." >> $GITHUB_STEP_SUMMARY
+
+    - name: Upload ESLint Summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: codeql-summary
+        path: summary.md

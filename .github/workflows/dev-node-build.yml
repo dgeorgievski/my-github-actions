@@ -189,4 +189,27 @@ jobs:
           package-command: ${{ inputs.package-command }}
           artifact-name: ${{ inputs.artifact-name }}
 
+  dashboard:
+    runs-on: ubuntu-latest
+    needs: [lint, unitTest]
+    if: always()
+    steps:
+      - name: Download all summaries
+        uses: actions/download-artifact@v4
+        with:
+          path: summaries
+
+      - name: Combine summaries
+        run: |
+          echo "# 🧾 CI Dashboard Summary" > full-summary.md
+          for file in summaries/*/summary.md; do
+            cat "$file" >> full-summary.md
+            echo -e "\n---\n" >> full-summary.md
+          done
+
+      - name: Publish combined summary
+        run: |
+          cat full-summary.md >> $GITHUB_STEP_SUMMARY
+
+
 
