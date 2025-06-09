@@ -1,0 +1,41 @@
+name: Grype Scan
+
+inputs:
+  version:
+    required: true
+    type: string
+  token:
+    required: true
+    type: string
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Install Grype
+    - name: Install Grype
+      shell: bash
+      run: |
+        curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+
+    # Log in to GitHub Container Registry
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ inputs.token }}
+
+    # Scan Docker image with Grype
+    - name: Scan Docker image with Grype
+      uses: anchore/grype-action@v1
+      with:
+        image-ref: ghcr.io/${{ github.repository }}:${{ inputs.version }}
+        format: sarif
+        fail-on: critical
+        output: grype-report.sarif
+        fail-on-severity: CRITICAL,HIGH
+        username: ${{ github.actor }}
+        password: ${{ inputs.token }}
