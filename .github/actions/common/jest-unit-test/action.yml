@@ -46,14 +46,19 @@ runs:
 
     - name: Summarize Jest Results
       run: |
-        PASSED=$(jq '.numPassedTests' jest-report.json)
-        FAILED=$(jq '.numFailedTests' jest-report.json)
-        TOTAL=$(jq '.numTotalTests' jest-report.json)
+          if [[ ! -f jest-report.json ]]; then
+            echo "## 🧪 Jest Unit Test Report" > summary.md
+            echo "- ⚠️ No Jest report found. Was Jest run with --json?" >> summary.md
+          else
+            PASSED=$(jq '.numPassedTests' jest-report.json)
+            FAILED=$(jq '.numFailedTests' jest-report.json)
+            TOTAL=$(jq '.numTotalTests' jest-report.json)
 
-        echo "## 🧪 Jest Unit Test Report" >> $GITHUB_STEP_SUMMARY
-        echo "- 🟢 Passed: $PASSED" >> $GITHUB_STEP_SUMMARY
-        echo "- 🔴 Failed: $FAILED" >> $GITHUB_STEP_SUMMARY
-        echo "- 📊 Total: $TOTAL" >> $GITHUB_STEP_SUMMARY
+            echo "## 🧪 Jest Unit Test Report" > summary.md
+            echo "- 🟢 Passed: $PASSED" >> summary.md
+            echo "- 🔴 Failed: $FAILED" >> summary.md
+            echo "- 📊 Total: $TOTAL" >> summary.md
+          fi
 
     
     - name: Upload ESLint Summary

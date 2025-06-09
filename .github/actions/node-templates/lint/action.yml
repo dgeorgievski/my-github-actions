@@ -40,12 +40,17 @@ runs:
 
     - name: ESLint Summary
       run: |
-        ERRORS=$(jq '[.[] | .messages[] | select(.severity==2)] | length' eslint-report.json)
-        WARNINGS=$(jq '[.[] | .messages[] | select(.severity==1)] | length' eslint-report.json)
+        if [[ ! -f eslint-report.json ]]; then
+          echo "## 🧹 ESLint Report" > summary.md
+          echo "- ⚠️ No report file found. Was ESLint run with JSON output?" >> summary.md
+        else
+          ERRORS=$(jq '[.[] | .messages[] | select(.severity==2)] | length' eslint-report.json)
+          WARNINGS=$(jq '[.[] | .messages[] | select(.severity==1)] | length' eslint-report.json)
 
-        echo "## 🧹 ESLint Report" > summary.md
-        echo "- ❌ Errors: $ERRORS" >> summary.md
-        echo "- ⚠️ Warnings: $WARNINGS" >> summary.md
+          echo "## 🧹 ESLint Report" > summary.md
+          echo "- ❌ Errors: $ERRORS" >> summary.md
+          echo "- ⚠️ Warnings: $WARNINGS" >> summary.md
+        fi
       shell: bash
 
     - name: Upload ESLint Summary
