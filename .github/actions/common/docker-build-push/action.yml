@@ -42,26 +42,3 @@ runs:
         tags: |
           ghcr.io/${{ steps.repo.outputs.repo }}:${{ inputs.version }}
           ghcr.io/${{ steps.repo.outputs.repo }}:latest
-
-    # - name: Scan Docker image with Trivy
-    #   uses: aquasecurity/trivy-action@master
-    #   with:
-    #     image-ref: ghcr.io/${{ steps.repo.outputs.repo }}:${{ inputs.version }}
-    #     format: table
-    #     exit-code: 0
-    #     vuln-type: os,library
-    #     severity: CRITICAL,HIGH
-    #     username: ${{ github.actor }}
-    #     password: ${{ inputs.token }}
-    
-    # - name: Install Grype
-    #   shell: bash
-    #   run: |
-    #     curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
-
-    # - name: Scan Docker image with Grype
-    #   shell: bash
-    #   run: |
-    #     IMAGE=ghcr.io/${{ steps.repo.outputs.repo }}:${{ inputs.version }}
-    #     echo "Scanning image: $IMAGE"
-    #     grype $IMAGE -o table
