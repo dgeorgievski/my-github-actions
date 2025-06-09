@@ -136,6 +136,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           severity: 'CRITICAL,HIGH'
+          version: ${{ needs.versioning.outputs.new_tag }}
 
 
   # This job packages the Node.js project, creating an artifact for deployment or distribution
