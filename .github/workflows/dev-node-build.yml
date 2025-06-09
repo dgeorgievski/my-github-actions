@@ -62,6 +62,7 @@ jobs:
           lint-command: ${{ inputs.lint-command }}
           node-version: ${{ inputs.node-version }}
           working-directory: ${{ inputs.working-directory }}
+          continue-on-error: ${{ inputs.contine-on-error }}
 
 
   # This job builds the Node.js project, preparing it for packaging
@@ -74,7 +75,6 @@ jobs:
           build-command: ${{ inputs.build-command }}
           node-version: ${{ inputs.node-version }}
           working-directory: ${{ inputs.working-directory }}
-          continue-on-error: ${{ inputs.contine-on-error }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
 
