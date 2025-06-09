@@ -44,6 +44,18 @@ on:
         required: false
         default: 'node-package'
         type: string
+      
+      run_trivy:
+        description: 'Run Trivy Scan'
+        required: false
+        default: true
+        type: boolean
+
+      run_grype:
+        description: 'Run Grype Scan'
+        required: false
+        default: true
+        type: boolean
 
       contine-on-error:
         description: "Continue on error for linting"
@@ -57,6 +69,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+      # This job sets up Node.js and runs the lint command
       - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/node-templates/lint@patch-1
         with:
           lint-command: ${{ inputs.lint-command }}
@@ -70,6 +83,7 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
     steps:
+      # This job sets up Node.js and runs the build command
       - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/node-templates/build@patch-1
         with:
           build-command: ${{ inputs.build-command }}
@@ -83,10 +97,12 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
     steps:
+      # This job sets up Node.js and runs unit tests
       - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/node-templates/setup@patch-1
         with:
           node-version: ${{ inputs.node-version }}
           working-directory: ${{ inputs.working-directory }}
+      # This step runs the unit tests using Jest
       - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/jest-unit-test@patch-1
         with:
           test-command: ${{ inputs.test-command }}
@@ -115,6 +131,7 @@ jobs:
     outputs:
       new_tag: ${{ steps.generate-tag.outputs.tag }}
     steps:
+      # This step checks out the code from the repository
       - id: generate-tag
         uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/git-tag-generation@patch-1
 
@@ -143,12 +160,15 @@ jobs:
     steps:
       # This job scans the Docker image for vulnerabilities using Trivy
       - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/trivy-scan@patch-1
+        if: ${{ inputs.run_trivy == true }}
         with:
           version: ${{ needs.versioning.outputs.new_tag }}
           token: ${{ secrets.GITHUB_TOKEN }}
           severity: 'CRITICAL,HIGH'
 
+      # This job scans the Docker image for vulnerabilities using Grype
       - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/grype-scan@patch-1
+        if: ${{ inputs.run_trivy == true }}
         with:
           version: ${{ needs.versioning.outputs.new_tag }}
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -158,6 +178,7 @@ jobs:
     needs: versioning
     runs-on: ubuntu-latest
     steps:
+      # This job sets up Node.js in the environment
       - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/node-templates/setup@patch-1
         with:
           node-version: ${{ inputs.node-version }}
