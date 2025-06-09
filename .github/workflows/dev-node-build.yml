@@ -136,10 +136,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           severity: 'CRITICAL,HIGH'
-      - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/grype-scan@patch-1
-        with:
-          version: ${{ needs.versioning.outputs.new_tag }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+
 
   # This job packages the Node.js project, creating an artifact for deployment or distribution
   package:
