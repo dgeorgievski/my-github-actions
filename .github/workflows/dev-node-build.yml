@@ -135,7 +135,7 @@ jobs:
 
   dockerScan:
     runs-on: ubuntu-latest
-    needs: publish
+    needs: [versioning, publish]
     if: ${{ needs.versioning.outputs.new_tag != '' }}
     permissions:
       contents: read
