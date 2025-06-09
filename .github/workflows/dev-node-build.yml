@@ -196,7 +196,7 @@ jobs:
     if: always()
     steps:
       # This job generates a dashboard summarizing the results of the previous jobs
-      - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/dashboard@patch-1
+      - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/common/github-dashboard@patch-1
 
 
 
