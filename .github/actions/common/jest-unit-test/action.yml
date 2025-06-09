@@ -45,6 +45,7 @@ runs:
         fail-on-error: false
 
     - name: Summarize Jest Results
+      shell: bash
       run: |
           if [[ ! -f jest-report.json ]]; then
             echo "## 🧪 Jest Unit Test Report" > summary.md
