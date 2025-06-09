@@ -26,6 +26,13 @@ runs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ inputs.token }}
+    
+    - name: Convert repository name to lowercase
+      shell: bash
+      id: repo
+      run: |
+        repo_lower=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
+        echo "repo=$repo_lower" >> $GITHUB_OUTPUT
 
     - name: Install Trivy
       uses: aquasecurity/trivy-action@master
@@ -33,7 +40,7 @@ runs:
     - name: Scan Docker image with Trivy
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: ghcr.io/${{ github.repository }}:${{ inputs.version }}
+        image-ref: ghcr.io/${{ steps.repo.outputs.repo }}:${{ inputs.version }}
         format: table
         exit-code: 0
         vuln-type: os,library
