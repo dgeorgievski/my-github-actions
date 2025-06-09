@@ -44,19 +44,12 @@ runs:
         CRITICAL=$(grep -c 'Critical' grype-report.txt || true)
         HIGH=$(grep -c 'High' grype-report.txt || true)
 
-        echo "## 🛡️ Grype Scan" > summary.md
-        echo "- 🚨 Critical: $CRITICAL" >> summary.md
-        echo "- ⚠️ High: $HIGH" >> summary.md
-        echo "" >> summary.md
-        echo "<details><summary>📄 View Raw Report</summary>" >> summary.md
-        echo '' >> summary.md
-        echo '```' >> summary.md
-        cat grype-report.txt >> summary.md
-        echo '```' >> summary.md
-        echo '</details>' >> summary.md
-
-    - name: Upload Grype Summary
-      uses: actions/upload-artifact@v4
-      with:
-        name: grype-summary
-        path: summary.md
+        echo "## 🛡️ Grype Scan" >> $GITHUB_STEP_SUMMARY
+        echo "- 🚨 Critical: $CRITICAL" >> $GITHUB_STEP_SUMMARY
+        echo "- ⚠️ High: $HIGH" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "<details><summary>📄 View Raw Report (truncated)</summary>" >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        head -n 100 grype-report.txt >> $GITHUB_STEP_SUMMARY
+        echo '```' >> $GITHUB_STEP_SUMMARY
+        echo '</details>' >> $GITHUB_STEP_SUMMARY
