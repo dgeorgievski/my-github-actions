@@ -27,6 +27,7 @@ runs:
         username: ${{ github.actor }}
         password: ${{ inputs.token }}
     
+    # This step will change the repository name to lowercase
     - name: Convert repository name to lowercase
       shell: bash
       id: repo
@@ -34,6 +35,7 @@ runs:
         repo_lower=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
         echo "repo=$repo_lower" >> $GITHUB_OUTPUT
 
+    # Install and scan using Trivy
     - name: Scan Docker image with Trivy
       uses: aquasecurity/trivy-action@master
       with:
@@ -46,7 +48,7 @@ runs:
         username: ${{ github.actor }}
         password: ${{ inputs.token }}
 
-    
+    # Upload the Trivy report as an artifact
     - name: Trivy Summary
       shell: bash
       run: |

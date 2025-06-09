@@ -13,12 +13,14 @@ runs:
       with:
         fetch-depth: 0
 
+  # This step sets up Git configuration for the action
     - name: Setup Git
       shell: bash
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
 
+    # This step determines the new tag based on commit messages
     - name: Determine tag from commits
       shell: bash
       id: set-tag

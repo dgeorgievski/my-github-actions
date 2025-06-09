@@ -14,6 +14,7 @@ runs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    # Log in to GitHub Container Registry
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
       with:
@@ -21,6 +22,7 @@ runs:
         username: ${{ github.actor }}
         password: ${{ inputs.token }}
     
+    # Convert repository name to lowercase for consistent tagging
     - name: Convert repository name to lowercase
       shell: bash
       id: repo
@@ -28,12 +30,14 @@ runs:
         repo_lower=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
         echo "repo=$repo_lower" >> $GITHUB_OUTPUT
 
+    # Set up Docker metadata and build the image
     - name: Set up Docker metadata
       id: meta
       uses: docker/metadata-action@v5
       with:
         images: ghcr.io/${{ github.repository }}
 
+    # Build and push the Docker image to GitHub Container Registry
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:

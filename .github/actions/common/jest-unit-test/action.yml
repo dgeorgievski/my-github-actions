@@ -36,6 +36,7 @@ runs:
         name: test-results
         path: test-results/junit.xml
     
+    # This step will generate a JSON report for Jest tests
     - name: Annotate test failures
       uses: dorny/test-reporter@v1
       with:
@@ -44,6 +45,7 @@ runs:
         reporter: jest-junit
         fail-on-error: false
 
+    # This step will generate a coverage report
     - name: Summarize Jest Results
       shell: bash
       run: |
