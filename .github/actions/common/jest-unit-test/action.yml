@@ -61,7 +61,6 @@ runs:
             echo "- 📊 Total: $TOTAL" >> summary.md
           fi
 
-    
     - name: Upload ESLint Summary
       uses: actions/upload-artifact@v4
       with:

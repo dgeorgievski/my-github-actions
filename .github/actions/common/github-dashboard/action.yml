@@ -1,0 +1,22 @@
+runs:
+  using: composite
+  steps:
+    # This step will download all summary files from previous jobs
+    - name: Download all summaries
+      uses: actions/download-artifact@v4
+      with:
+        path: summaries
+
+    # This step will combine all summary files into a single markdown file
+    - name: Combine summaries
+      run: |
+        echo "# 🧾 CI Dashboard Summary" > full-summary.md
+        for file in summaries/*/summary.md; do
+          cat "$file" >> full-summary.md
+          echo -e "\n---\n" >> full-summary.md
+        done
+
+    # This step will upload the combined summary to the GitHub step summary
+    - name: Publish combined summary
+      run: |
+        cat full-summary.md >> $GITHUB_STEP_SUMMARY
