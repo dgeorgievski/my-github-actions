@@ -39,6 +39,7 @@ runs:
         grype $IMAGE -o table > grype-report.txt
     
     - name: Summarize Grype Report
+      shell: bash
       run: |
         CRITICAL=$(grep -c 'Critical' grype-report.txt || true)
         HIGH=$(grep -c 'High' grype-report.txt || true)
