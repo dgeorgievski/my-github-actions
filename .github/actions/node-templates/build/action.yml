@@ -24,7 +24,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/node-templates/setup@patch-1
+    - uses: altimetrik-digital-enablement-demo-hub/platform-github-actions/.github/actions/node-templates/setup@main
       with:
         node-version: ${{ inputs.node-version }}
         working-directory: ${{ inputs.working-directory }}
