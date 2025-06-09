@@ -191,7 +191,7 @@ jobs:
 
   dashboard:
     runs-on: ubuntu-latest
-    needs: [lint, unitTest]
+    needs: [lint, unitTest, dockerScan]
     if: always()
     steps:
       - name: Download all summaries
