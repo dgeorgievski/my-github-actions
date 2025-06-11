@@ -1,13 +1,14 @@
 name: Common Node Setup
+description: 'Setup Node.js environment and install dependencies for a Node.js project'
 
 inputs:
   node-version:
+    description: 'Node.js version to use'
     required: false
-    type: string
     default: '20'
   working-directory:
+    description: 'The working directory for the Node.js project'
     required: false
-    type: string
     default: '.'
 
 runs:

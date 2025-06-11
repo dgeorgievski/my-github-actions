@@ -1,3 +1,6 @@
+name: 'GitHub Dashboard Summary'
+description: 'Combines and publishes CI dashboard summaries from multiple jobs.'
+
 runs:
   using: composite
   steps:
@@ -9,6 +12,7 @@ runs:
 
     # This step will combine all summary files into a single markdown file
     - name: Combine summaries
+      shell: bash
       run: |
         echo "# 🧾 CI Dashboard Summary" > full-summary.md
         for file in summaries/*/summary.md; do
@@ -18,5 +22,6 @@ runs:
 
     # This step will upload the combined summary to the GitHub step summary
     - name: Publish combined summary
+      shell: bash
       run: |
         cat full-summary.md >> $GITHUB_STEP_SUMMARY

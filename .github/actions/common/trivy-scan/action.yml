@@ -8,14 +8,13 @@ inputs:
   version:
     description: 'Docker image version to scan'
     required: true
-    type: string
     default: 'latest'
   token:
+    description: 'GitHub token for authentication'
     required: true
-    type: string
   severity:
+    description: 'Comma-separated list of severity levels to include in the scan (e.g., CRITICAL,HIGH,MEDIUM,LOW,UNKNOWN)'
     required: false
-    type: string
     default: 'CRITICAL,HIGH'
 
 runs:

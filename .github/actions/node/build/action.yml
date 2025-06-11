@@ -1,30 +1,27 @@
 name: Build Node Project
+description: 'Build a Node.js project and deploy the build artifacts to GitHub Pages'
 
 inputs:
   build-command:
     description: 'Build command (e.g., npm run build or npx ng build)'
     required: false
     default: 'npm run build'
-    type: string
   node-version:
     description: 'Node.js version to use'
     required: false
     default: '20'
-    type: string
   working-directory:
     description: 'Working directory for the build command'
     required: false
     default: '.'
-    type: string
   token:
     description: 'GitHub token for authentication'
     required: true
-    type: string
 
 runs:
   using: composite
   steps:
-    - uses: altimetrik-digital-enablement-demo-hub/platform-github-actions/.github/actions/node-templates/setup@main
+    - uses: KaranbirSinghAhluwalia/platform-github-actions/.github/actions/node/setup@testing
       with:
         node-version: ${{ inputs.node-version }}
         working-directory: ${{ inputs.working-directory }}

@@ -6,12 +6,10 @@ inputs:
     description: "Command to run unit tests"
     required: false
     default: 'npm test'
-    type: string
   continue-on-error:
     description: "Continue on error for unit tests"
     required: false
-    default: true
-    type: boolean
+    default: 'true'
 
 
 

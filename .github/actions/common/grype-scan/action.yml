@@ -1,12 +1,14 @@
 name: Grype Scan
+description: 'Scan a Docker image for vulnerabilities using Grype'
 
 inputs:
   version:
     required: true
-    type: string
+    description: 'Version of the Docker image to scan'
+    default: 'latest'
   token:
     required: true
-    type: string
+    description: 'GitHub token for authentication'
 
 runs:
   using: 'composite'
