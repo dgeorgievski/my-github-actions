@@ -27,8 +27,8 @@ runs:
       shell: bash
       continue-on-error: true
       run: |
-        echo "Running: ${{ inputs.test-command }} --coverage --json --outputFile=jest-report.json"
-        ${{ inputs.test-command }} --coverage --json --outputFile=jest-report.json || true
+        echo "Running: ${{ inputs.test-command }} -- --coverage --json --outputFile=jest-report.json"
+        ${{ inputs.test-command }} -- --coverage --json --outputFile=jest-report.json || true
 
     # Upload JUnit XML test results
     - name: Upload test results
