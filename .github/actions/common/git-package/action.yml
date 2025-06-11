@@ -1,4 +1,7 @@
 name: Package Node Project
+description: |
+  This action packages a Node.js project using a custom command and uploads the resulting artifact.
+  It is designed to be used in workflows that require packaging of Node.js applications or libraries.
 
 inputs:
   package-command:
