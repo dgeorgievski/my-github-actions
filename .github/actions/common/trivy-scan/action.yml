@@ -30,6 +30,15 @@ runs:
         username: ${{ github.actor }}
         password: ${{ inputs.token }}
     
+     # This step will change the repository name to lowercase
+    - name: Convert repository name to lowercase
+      shell: bash
+      id: repo
+      run: |
+        repo_lower=$(echo "${GITHUB_REPOSITORY}" | tr '[:upper:]' '[:lower:]')
+        echo "repo=$repo_lower" >> $GITHUB_OUTPUT
+    
+    # Install Trivy
     - name: Download Trivy
       shell: bash
       run: |
@@ -39,6 +48,7 @@ runs:
         sudo mv trivy /usr/local/bin/
         trivy --version
 
+    # Scan the Docker image with Trivy
     - name: Run Trivy Scan
       shell: bash
       run: |
@@ -50,6 +60,7 @@ runs:
           --password "${{ inputs.token }}" \
           $IMAGE | tee trivy-report.txt
 
+    # Upload the Trivy report as an artifact
     - name: Trivy Summary
       shell: bash
       run: |
