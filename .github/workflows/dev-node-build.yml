@@ -51,11 +51,21 @@ on:
         default: true
         type: boolean
 
+
+jobs:
+  # This job sets up the Node.js environment, installs dependencies, and prepares the project for building
+  setup:
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/setup-node.yml@patch-1
+    with:
+      node-version: ${{ inputs.node-version }}
+      working-directory: ${{ inputs.working-directory }}
+=======
       run_grype:
         description: 'Run Grype Scan'
         required: false
         default: true
         type: boolean
+
 
       contine-on-error:
         description: "Continue on error for linting"
@@ -66,6 +76,11 @@ on:
 jobs:
   # This job runs the linting process to ensure code quality
   lint:
+    needs: setup
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/lint-node.yml@patch-1
+    with:
+      lint-command: ${{ inputs.lint-command }}
+
     runs-on: ubuntu-latest
     steps:
       # This job sets up Node.js and runs the lint command
@@ -80,6 +95,11 @@ jobs:
   # This job builds the Node.js project, preparing it for packaging
   build:
     needs: lint
+
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/build-node.yml@patch-1
+    with:
+      build-command: ${{ inputs.build-command }}
+
     runs-on: ubuntu-latest
     steps:
       # This job sets up Node.js and runs the build command
@@ -91,9 +111,30 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
 
+
   # This job executes unit test
   unitTest:
     needs: lint
+
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/unit-test-node.yml@patch-1
+    with:
+      test-command: ${{ inputs.test-command }}
+
+  # This job packages the Node.js project, creating an artifact for deployment or distribution
+  package:
+    needs: [build, test]
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/package-node.yml@patch-1
+    with:
+      working-directory: ${{ inputs.working-directory }}
+      package-command: ${{ inputs.package-command }}
+      artifact-name: ${{ inputs.artifact-name }}
+      package-output-dir: '.'
+
+  # This job handles the release process, using semantic-release to automate versioning and publishing
+  release:
+    needs: [build, test, lint, package]
+    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/semantic-release-node.yml@patch-1
+
     runs-on: ubuntu-latest
     steps:
       # This job sets up Node.js and runs unit tests
@@ -196,3 +237,4 @@ jobs:
     steps:
       # This job generates a dashboard summarizing the results of the previous jobs
       - uses: altimetrik-digital-enablement-demo-hub/platform-github-actions/.github/actions/common/github-dashboard@main
+
