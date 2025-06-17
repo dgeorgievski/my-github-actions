@@ -51,21 +51,11 @@ on:
         default: true
         type: boolean
 
-
-jobs:
-  # This job sets up the Node.js environment, installs dependencies, and prepares the project for building
-  setup:
-    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/setup-node.yml@patch-1
-    with:
-      node-version: ${{ inputs.node-version }}
-      working-directory: ${{ inputs.working-directory }}
-=======
       run_grype:
         description: 'Run Grype Scan'
         required: false
         default: true
         type: boolean
-
 
       contine-on-error:
         description: "Continue on error for linting"
@@ -76,15 +66,16 @@ jobs:
 jobs:
   # This job runs the linting process to ensure code quality
   lint:
-    needs: setup
-    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/lint-node.yml@patch-1
-    with:
-      lint-command: ${{ inputs.lint-command }}
-
     runs-on: ubuntu-latest
     steps:
+    # This job sets up Node.js and runs the lint command
+      - uses: altimetrik-digital-enablement-demo-hub/platform-github-actions/.github/actions/node/setup@main
+        with:
+          node-version: ${{ inputs.node-version }}
+          working-directory: ${{ inputs.working-directory }}
+
       # This job sets up Node.js and runs the lint command
-      - uses:  altimetrik-digital-enablement-demo-hub/platform-github-actions/.github/actions/node/lint@main
+      - uses: altimetrik-digital-enablement-demo-hub/platform-github-actions/.github/actions/node/lint@main
         with:
           lint-command: ${{ inputs.lint-command }}
           node-version: ${{ inputs.node-version }}
@@ -95,13 +86,9 @@ jobs:
   # This job builds the Node.js project, preparing it for packaging
   build:
     needs: lint
-
-    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/build-node.yml@patch-1
-    with:
-      build-command: ${{ inputs.build-command }}
-
     runs-on: ubuntu-latest
     steps:
+      
       # This job sets up Node.js and runs the build command
       - uses: altimetrik-digital-enablement-demo-hub/platform-github-actions/.github/actions/node/build@main
         with:
@@ -111,30 +98,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
 
-
   # This job executes unit test
   unitTest:
     needs: lint
-
-    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/unit-test-node.yml@patch-1
-    with:
-      test-command: ${{ inputs.test-command }}
-
-  # This job packages the Node.js project, creating an artifact for deployment or distribution
-  package:
-    needs: [build, test]
-    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/package-node.yml@patch-1
-    with:
-      working-directory: ${{ inputs.working-directory }}
-      package-command: ${{ inputs.package-command }}
-      artifact-name: ${{ inputs.artifact-name }}
-      package-output-dir: '.'
-
-  # This job handles the release process, using semantic-release to automate versioning and publishing
-  release:
-    needs: [build, test, lint, package]
-    uses: KaranbirSinghAhluwalia/platform-github-actions/.github/workflows/semantic-release-node.yml@patch-1
-
     runs-on: ubuntu-latest
     steps:
       # This job sets up Node.js and runs unit tests
@@ -205,6 +171,14 @@ jobs:
           version: ${{ needs.versioning.outputs.new_tag }}
           token: ${{ secrets.GITHUB_TOKEN }}
           severity: 'CRITICAL,HIGH'
+      
+      - uses: altimetrik-digital-enablement-demo-hub/platform-github-actions/.github/actions/common/github-dashboard@main
+        if: ${{ inputs.run_trivy == true }}
+        with:
+          tool: 'Trivy'
+          report: 'trivy-report.txt'
+          critical_keyword: 'CRITICAL'
+          high_keyword: 'HIGH'
 
       # This job scans the Docker image for vulnerabilities using Grype
       - uses: altimetrik-digital-enablement-demo-hub/platform-github-actions/.github/actions/common/grype-scan@main
@@ -212,6 +186,14 @@ jobs:
         with:
           version: ${{ needs.versioning.outputs.new_tag }}
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: altimetrik-digital-enablement-demo-hub/platform-github-actions/.github/actions/common/github-dashboard@main
+        if: ${{ inputs.run_grype == true }}
+        with:
+          tool: 'Grype'
+          report: 'grype-report.txt'
+          critical_keyword: 'CRITICAL'
+          high_keyword: 'HIGH'
 
   # This job packages the Node.js project, creating an artifact for deployment or distribution
   package:

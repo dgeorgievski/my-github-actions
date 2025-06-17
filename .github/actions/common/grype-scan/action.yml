@@ -43,6 +43,12 @@ runs:
         echo "Scanning image: $IMAGE"
         grype $IMAGE -o table > grype-report.txt
     
+    - name: Upload Grype Summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: Grype-summary
+        path: Grype-summary.txt
+    
     # Upload the Grype report as an artifact
     - name: Summarize Grype Report
       shell: bash
