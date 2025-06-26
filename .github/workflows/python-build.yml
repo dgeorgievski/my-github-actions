@@ -63,7 +63,7 @@ on:
         default: true
         type: boolean
 
-      contine-on-error:
+      continue-on-error:
         description: "Continue on error for linting"
         required: false
         default: true
@@ -84,7 +84,7 @@ jobs:
       - uses: dgeorgievski/my-github-actions/.github/actions/python/lint@test-py
         with:
           lint-command: ${{ inputs.lint-command }}
-          continue-on-error: ${{ inputs.contine-on-error }}
+          continue-on-error: "${{ inputs.continue-on-error }}"
 
   # This job executes unit test
   unit-test:
@@ -100,7 +100,7 @@ jobs:
       - uses: dgeorgievski/my-github-actions/.github/actions/python/unittest@test-py
         with:
           test-command: ${{ inputs.test-command }}
-          continue-on-error: ${{ inputs.continue-on-error }}
+          continue-on-error: "${{ inputs.continue-on-error }}"
   
   # This job runs CodeQL analysis to identify security vulnerabilities and code quality issues
   security-scan:

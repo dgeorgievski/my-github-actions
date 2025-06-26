@@ -9,14 +9,20 @@ inputs:
   continue-on-error:
     description: "Continue on error"
     required: false
-    default: "true"
+    default: 'true'
 
 
 runs:
   using: "composite"
   steps:
-    - name: Run Pylint
+    - name: Run Pylint continue on error
+      if: inputs.continue-on-error == 'true' 
       shell: bash
-      continue-on-error: ${{ inputs.continue-on-error }}
+      continue-on-error: true
+      run: |
+        ${{ inputs.lint-command }}
+    - name: Run Pylint fail on error
+      if: inputs.continue-on-error != 'true' 
+      shell: bash
       run: |
         ${{ inputs.lint-command }}

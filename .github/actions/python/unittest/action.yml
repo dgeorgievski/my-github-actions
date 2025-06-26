@@ -15,9 +15,16 @@ runs:
   using: "composite"
   steps:
     # This step will execute the unittest command
-    - name: Run unit tests
-      continue-on-error: ${{ inputs.continue-on-error }}
+    - name: Run unit tests - continue on error
+      if: inputs.continue-on-error == 'true' 
+      shell: bash
+      continue-on-error: true
       run: |
         cd $GITHUB_WORKSPACE
         ${{ inputs.test-command }}
+    - name: Run unit tests - fail on error
+      if: inputs.continue-on-error != 'true' 
       shell: bash
+      run: |
+        cd $GITHUB_WORKSPACE
+        ${{ inputs.test-command }}  
