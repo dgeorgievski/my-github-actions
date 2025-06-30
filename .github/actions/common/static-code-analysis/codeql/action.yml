@@ -6,6 +6,10 @@ inputs:
     description: 'Languages to analyze'
     required: true
     default: 'javascript'
+  working-directory:
+    description: 'Working directory for the CodeQL analysis'
+    required: false
+    default: '.'
 
 runs:
   using: "composite"
