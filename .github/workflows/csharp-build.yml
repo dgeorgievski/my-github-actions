@@ -258,7 +258,7 @@ jobs:
           version: ${{ needs.release.outputs.app-version }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: dgeorgievski/my-github-actions/.github/actions/common/github-actions/github-dashboard@test-cs
+      - uses: dgeorgievski/my-github-actions/.github/actions/common/github-actions/git-dashboard@test-cs
         if: ${{ inputs.run_grype == true }}
         with:
           tool: 'Grype'
