@@ -1,0 +1,30 @@
+name: GitHub release for .Net application
+on:
+  workflow_call:
+    inputs:
+      dotnet-version:
+        description: 'Version of .NET SDK to use. Default 9.0.300; can be any valid .NET SDK version.'
+        required: false
+        type: string
+        default: '9.0.300'
+
+permissions:
+  actions: read
+  contents: write
+  security-events: write
+  packages: write
+      
+jobs:
+  release:
+    name: Release
+    runs-on: 'ubuntu-latest'
+    outputs:
+      app-version: ${{ steps.versionize.outputs.app-version }}
+    steps:
+      - uses: dgeorgievski/my-github-actions/.github/actions/dotnet/release@test-cs
+        id: versionize
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
+          git-fetch-depth: 0   
+          git-fetch-tags: "true"
+          token: ${{ secrets.GITHUB_TOKEN }}  
