@@ -88,6 +88,9 @@ permissions:
   contents: write
   security-events: write
   packages: write
+  issues: read
+  checks: write
+  pull-requests: write
       
 jobs:
   lint:
@@ -157,7 +160,6 @@ jobs:
           languages: 'csharp'
           working-directory: ${{ inputs.working-directory }}
 
-
   build:
     name: Build ${{ inputs.app-name }}
     needs: [test, codeql]
@@ -177,7 +179,6 @@ jobs:
           app-name: ${{ inputs.app-name }}
           dotnet-version: ${{ inputs.dotnet-version }}
 
-  
   release:
     name: Release ${{ inputs.app-name }}
     needs: build
