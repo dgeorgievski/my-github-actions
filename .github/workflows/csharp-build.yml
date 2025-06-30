@@ -229,7 +229,7 @@ jobs:
   
   docker-scan:
     runs-on: ubuntu-latest
-    needs: [release, docker-build-and-push]
+    needs: [release, package]
     if: ${{ needs.release.outputs.app-version != '' }}
     permissions:
       contents: read
