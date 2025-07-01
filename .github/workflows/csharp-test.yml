@@ -109,16 +109,14 @@ jobs:
     if: needs.image-tag.outputs.image-tag != '' 
     runs-on: 'ubuntu-latest'
     steps:
-      - uses: dgeorgievski/my-github-actions/.github/actions/dotnet/package@test-cs
+      - uses: dgeorgievski/my-github-actions/.github/actions/common/docker-build-push@test-cs
         with:
-          language: ${{ inputs.language }}
-          app-name: ${{ inputs.app-name }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          version: ${{ needs.image-tag.outputs.image-tag }}
           context: ${{ inputs.docker-context }}
           docker-file: ${{ inputs.docker-file }}
-          image-tag: ${{ needs.image-tag.outputs.image-tag }}
-          registry: ${{ inputs.registry }}
           push: ${{ inputs.docker-push }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ inputs.registry }}
   
   docker-scan:
     runs-on: ubuntu-latest
