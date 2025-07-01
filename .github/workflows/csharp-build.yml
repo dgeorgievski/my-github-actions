@@ -234,7 +234,7 @@ jobs:
         if: ${{ inputs.run_trivy == true }}
         with:
           registry: ${{ inputs.registry }}
-          image-tag: ${{ needs.release.outputs.app-version }}
+          image-tag: ${{ needs.image-tag.outputs.image-tag }}
           token: ${{ secrets.GITHUB_TOKEN }}
           severity: 'CRITICAL,HIGH'
 
