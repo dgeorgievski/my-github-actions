@@ -1,0 +1,139 @@
+name: build .Net application
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        description: 'Name of the .NET '
+        required: true
+        type: string
+      language:
+        description: '.Net programming language used in the application. Default csharp; can be csharp or fsharp.'
+        required: false
+        type: string
+        default: 'csharp'
+      dotnet-version:
+        description: 'Version of .NET SDK to use. Default 9.0.300; can be any valid .NET SDK version.'
+        required: false
+        type: string
+        default: '9.0.300'
+      dotnet-tools-restore:
+        description: 'Restore .NET tools before running the linter. Default true; can be false to skip tool restoration.'
+        required: false
+        type: boolean
+        default: true
+      dotnet-linter-csharpier:
+        description: 'Run CSharpier linter on the code. Default true; can be false to skip CSharpier linting.'
+        required: false
+        type: boolean  
+        default: true
+      dotnet-linter-roslynator:
+        description: 'Run Roslynator linter on the code. Default true; can be false to skip Roslynator linting.'
+        required: false
+        type: boolean  
+        default: false
+      dotnet-test-verbosity:
+        description: 'Verbosity level for .NET tests. Default normal; can be quiet, minimal, normal, detailed, or diagnostic.'
+        required: false
+        type: string
+        default: 'normal'
+      security-trivy:
+        description: 'Run Trivy security scan on the Docker image. Default true; can be false to skip Trivy scan.'
+        required: false
+        type: boolean
+        default: true
+      security-snyk:
+        description: 'Run Snyk security scan on the Docker image. Default true; can be false to skip Snyk scan.'
+        required: false
+        type: boolean
+        default: false
+      working-directory:
+        description: 'Working directory for the .NET application. Default "."; can be set to a custom path.'
+        required: false
+        type: string
+        default: '.'
+      registry:
+        description: 'Container registry to push the image to. Default ghcr.io.'
+        required: false
+        type: string
+        default: 'ghcr.io'
+      docker-context:
+        description: 'Context for Docker build. Default "."'
+        required: false
+        type: string
+        default: '.'
+      docker-file:
+        description: 'Dockerfile path. Default ./Dockerfile; can be set to a custom Dockerfile path'
+        required: false
+        type: string
+        default: './Dockerfile'
+      docker-push:
+        description: 'Push the Docker image to the registry. Default true'
+        required: false
+        type: boolean
+        default: true
+      run_trivy:
+        description: 'Run Trivy Scan'
+        required: false
+        default: true
+        type: boolean
+
+      run_grype:
+        description: 'Run Grype Scan'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  actions: read
+  contents: write
+  security-events: write
+  packages: write
+  issues: read
+  checks: write
+  pull-requests: write
+      
+jobs:
+  image-tag:
+    name: Setup Image Tag
+    runs-on: 'ubuntu-latest'
+    outputs:
+      image-tag: ${{ steps.image-tag.outputs.image-tag }}
+    steps:
+      - uses: dgeorgievski/my-github-actions/.github/actions/dotnet/image-tag@test-cs
+        id: image-tag
+        
+  package:
+    name: Package ${{ inputs.app-name }}
+    needs: image-tag
+    if: needs.image-tag.outputs.image-tag != '' 
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: dgeorgievski/my-github-actions/.github/actions/dotnet/package@test-cs
+        with:
+          language: ${{ inputs.language }}
+          app-name: ${{ inputs.app-name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          context: ${{ inputs.docker-context }}
+          docker-file: ${{ inputs.docker-file }}
+          image-tag: ${{ needs.image-tag.outputs.image-tag }}
+          registry: ${{ inputs.registry }}
+          push: ${{ inputs.docker-push }}
+  
+  docker-scan:
+    runs-on: ubuntu-latest
+    needs: [image-tag, package]
+    if: needs.image-tag.outputs.image-tag != '' 
+    permissions:
+      contents: read
+      packages: read 
+    steps:
+      # This job scans the Docker image for vulnerabilities using Trivy
+      - uses: dgeorgievski/my-github-actions/.github/actions/dotnet/security-scan/trivy@test-cs
+        if: ${{ inputs.run_trivy == true }}
+        with:
+          registry: ${{ inputs.registry }}
+          image-tag: ${{ needs.image-tag.outputs.image-tag }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          severity: 'CRITICAL,HIGH'
+
+
