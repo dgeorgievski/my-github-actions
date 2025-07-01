@@ -16,41 +16,6 @@ on:
         required: false
         type: string
         default: '9.0.300'
-      dotnet-tools-restore:
-        description: 'Restore .NET tools before running the linter. Default true; can be false to skip tool restoration.'
-        required: false
-        type: boolean
-        default: true
-      dotnet-linter-csharpier:
-        description: 'Run CSharpier linter on the code. Default true; can be false to skip CSharpier linting.'
-        required: false
-        type: boolean  
-        default: true
-      dotnet-linter-roslynator:
-        description: 'Run Roslynator linter on the code. Default true; can be false to skip Roslynator linting.'
-        required: false
-        type: boolean  
-        default: false
-      dotnet-test-verbosity:
-        description: 'Verbosity level for .NET tests. Default normal; can be quiet, minimal, normal, detailed, or diagnostic.'
-        required: false
-        type: string
-        default: 'normal'
-      security-trivy:
-        description: 'Run Trivy security scan on the Docker image. Default true; can be false to skip Trivy scan.'
-        required: false
-        type: boolean
-        default: true
-      security-snyk:
-        description: 'Run Snyk security scan on the Docker image. Default true; can be false to skip Snyk scan.'
-        required: false
-        type: boolean
-        default: false
-      working-directory:
-        description: 'Working directory for the .NET application. Default "."; can be set to a custom path.'
-        required: false
-        type: string
-        default: '.'
       registry:
         description: 'Container registry to push the image to. Default ghcr.io.'
         required: false
@@ -71,17 +36,12 @@ on:
         required: false
         type: boolean
         default: true
-      run_trivy:
+      run-trivy:
         description: 'Run Trivy Scan'
         required: false
         default: true
         type: boolean
-      run_grype:
-        description: 'Run Grype Scan'
-        required: false
-        default: true
-        type: boolean
-
+    
 permissions:
   actions: read
   contents: write
@@ -130,7 +90,7 @@ jobs:
     steps:
       # This job scans the Docker image for vulnerabilities using Trivy
       - uses: dgeorgievski/my-github-actions/.github/actions/dotnet/security-scan/trivy@test-cs
-        if: ${{ inputs.run_trivy == true }}
+        if: ${{ inputs.run-trivy == true }}
         with:
           registry: ${{ inputs.registry }}
           image-tag: ${{ needs.release.outputs.app-version }}
