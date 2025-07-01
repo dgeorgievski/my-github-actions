@@ -1,4 +1,4 @@
-name: build .Net application
+name: build short .Net application
 on:
   workflow_call:
     inputs:
